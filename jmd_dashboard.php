@@ -49,7 +49,6 @@ if (txpinterface === 'admin')
 {
     global $siteurl, $textarray;
     add_privs('jmd_dashboard', 1);
-    register_tab('extensions', 'jmd_dashboard', 'jmd_dashboard');
     register_callback('jmd_dashboard', 'jmd_dashboard');
     ob_start('jmd_dashboard_tab');
 
