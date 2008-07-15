@@ -106,35 +106,24 @@ function jmd_dashboard($event, $step)
     </a>
 </h1>
 
-<div style="width: 400px; margin: 0 auto;">
+<div style="margin: 0 auto; width: 400px;">
     <h1>
         <txp:site_name/>: Last modified on <txp:jmd_dashboard_lastmod/>
     </h1>
 
     <h2>Recently published articles</h2>
-    <txp:hide>SVN/4.0.7 - use the awesome containers:
-        <txp:article_custom break="li" wraptag="ul">
-            <txp:title/> &#8211;
-            <txp:jmd_dashboard_edit>
-                edit #<txp:article_id/>
-            </txp:jmd_dashboard_edit>
-        </txp:article_custom>
-    </txp:hide>
-    <txp:hide>
-        To add the edit link, drop an edit tag in a form and add the form att:
-        <txp:article_custom form="my_edit_tag" limit="5"/>
-    </txp:hide>
-    <txp:article_custom limit="5"/>
+    <txp:article_custom break="li" wraptag="ul">
+        <txp:title/> &#8211;
+        <txp:jmd_dashboard_edit>
+            edit #<txp:article_id/>
+        </txp:jmd_dashboard_edit>
+    </txp:article_custom>
 
     <h2>Recent comments</h2>
-    <txp:hide>SVN/4.0.7:
-        <txp:recent_comments break="li" wraptag="ul">
-            <txp:comment_message/> &#8211; <txp:comment_name link="0"/>
-            (<txp:jmd_dashboard_edit type="comment">edit</txp:jmd_dashboard_edit>)
-        </txp:recent_comments>
-    </txp:hide>
-    <txp:hide>For the edit link, add a form attribute.</txp:hide>
-    <txp:recent_comments />
+    <txp:recent_comments break="li" wraptag="ul">
+        <txp:comment_message/> &#8211; <txp:comment_name link="0"/>
+        (<txp:jmd_dashboard_edit type="comment">edit</txp:jmd_dashboard_edit>)
+    </txp:recent_comments>
 </div>
 FORM;
         safe_insert("txp_form", "Form = '". doSlash($contents) ."',
