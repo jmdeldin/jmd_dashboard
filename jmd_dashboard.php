@@ -15,7 +15,7 @@ if (0) {
 
 h1. jmd_dashboard: Customizable dashboard
 
-"Edit the tab name":?event=jmd_dashboard&step=lang. To modify the dashboard, edit the form @jmd_dashboard@. This form can contain Textpattern and plugin tags.
+To modify the dashboard, edit the form @jmd_dashboard@. This form can contain Textpattern and plugin tags.
 
 h2. Example dashboard
 
@@ -76,21 +76,12 @@ if (txpinterface == 'admin')
         header("Location: $uri");
         exit;
     }
-    
-    global $prefs;
-    if (empty($prefs['jmd_dashboard_lang']))
-    {
-        $tmp = 'Dashboard';
-        $prefs['jmd_dashboard_lang'] = $tmp;
-        safe_insert("txp_prefs", "prefs_id = 1,
-            name = 'jmd_dashboard_lang',
-            val = '$tmp',
-            type = 2,
-            event = 'admin',
-            html = 'text_input',
-            position = 0
-        ");
-    }
+
+    global $textarray;
+    $i10n = array(
+        'jmd_dashboard_tab' => 'Dashboard',
+    );
+    $textarray = array_merge($textarray, $i10n);
 }
 
 /**
@@ -98,37 +89,16 @@ if (txpinterface == 'admin')
  */
 function jmd_dashboard($event, $step)
 {
-    global $prefs;
-    pageTop($prefs['jmd_dashboard_lang']);
-    if ($step == 'lang')
+    pageTop(gTxt('jmd_dashboard_tab'));
+    include_once txpath . DS . 'publish.php';
+    if (empty($GLOBALS['pretext']))
     {
-        if (gps('tab'))
-        {
-             $prefs['jmd_dashboard_lang'] = gps('tab');
-             safe_update("txp_prefs", "val = '" . gps('tab') . "'",
-                 "name = 'jmd_dashboard_lang'"
-             );
-        }
-        echo form(
-            fieldset(
-                 '<label>Dashboard tab<br/>' . 
-                 fInput('text', 'tab', $prefs['jmd_dashboard_lang']) . '</label>', 'Language settings'
-             ) .
-             tag('Save', 'button') .
-             eInput('jmd_dashboard') . sInput('lang'), 'width: 300px; margin: 0 auto'
-        );
+        $GLOBALS['pretext'] = array('id' => '', 'q' => '',);
     }
-    else
+    $contents = safe_field("Form", "txp_form", "name = 'jmd_dashboard'");
+    if (empty($contents))
     {
-        include_once txpath . '/publish.php';
-        if (empty($GLOBALS['pretext']))
-        {
-            $GLOBALS['pretext'] = array('id' => '', 'q' => '',);
-        }
-        $contents = safe_field("Form", "txp_form", "name = 'jmd_dashboard'");
-        if (empty($contents))
-        {
-            $contents = <<<FORM
+        $contents = <<<FORM
 <h1 style="text-align:center">
     Hey, you haven&#8217;t customized jmd_dashboard yet.
     <a href="?event=form&amp;step=form_edit&amp;name=jmd_dashboard">
@@ -167,11 +137,11 @@ function jmd_dashboard($event, $step)
     <txp:recent_comments />
 </div>
 FORM;
-            safe_insert("txp_form", "Form = '". doSlash($contents) ."',
-                type = 'misc', name = 'jmd_dashboard'");
-        }
-        echo parse($contents);
+        safe_insert("txp_form", "Form = '". doSlash($contents) ."',
+            type = 'misc', name = 'jmd_dashboard'");
     }
+
+    echo parse($contents);
 }
 
 /**
@@ -180,11 +150,14 @@ FORM;
  */
 function jmd_dashboard_tab($buffer)
 {
-    $dashTab = '<td class="tabdown">
-        <a href="?event=jmd_dashboard" class="plain">' . 
-            $GLOBALS['prefs']['jmd_dashboard_lang'] 
-        . '</a>
-    </td>';
+    $gTxt = 'gTxt';
+    $dashTab = <<<EOD
+<td class="tabdown">
+    <a href="?event=jmd_dashboard" class="plain">
+        {$gTxt('jmd_dashboard_tab')}
+    </a>
+</td>
+EOD;
     if (gps('event') == 'jmd_dashboard')
     {
         $dashTab = str_replace('tabdown', 'tabup', $dashTab);
