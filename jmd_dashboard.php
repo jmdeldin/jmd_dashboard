@@ -96,7 +96,7 @@ function jmd_dashboard($event, $step)
         $GLOBALS['pretext'] = array('id' => '', 'q' => '',);
     }
     $contents = safe_field("Form", "txp_form", "name = 'jmd_dashboard'");
-    if (!isset($contents))
+    if ($contents === FALSE)
     {
         $contents = <<<FORM
 <h1 style="text-align:center">
