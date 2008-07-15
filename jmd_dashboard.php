@@ -17,29 +17,12 @@ h1. jmd_dashboard: Customizable dashboard
 
 To modify the dashboard, edit the form @jmd_dashboard@. This form can contain Textpattern and plugin tags.
 
-h2. Example dashboard
-
-h3. Form: jmd_dashboard
-
-bc. <txp:hide>Display pending articles</txp:hide>
-<h2>Pending articles</h2>
-<ul>
-    <txp:article_custom form="jmd_dashboard_pending" status="pending"/>
-</ul>
-
-h3. Form: jmd_dashboard_pending
-
-bc. <li>
-    <txp:title/> &8211;
-    <txp:jmd_dashboard_edit>edit #<txp:article_id/></txp:jmd_dashboard_edit>
-</li>
-
 h2. Tag reference
 
 * "jmd_dashboard_edit":#jmd_dashboard_edit
 * "jmd_dashboard_lastmod":#jmd_dashboard_lastmod
 
-h4(#jmd_dashboard_edit). @<txp:jmd_dashboard_edit type="article|comment">edit</txp:jmd_dashboard_edit>@
+h2(#jmd_dashboard_edit). @<txp:jmd_dashboard_edit type="article|comment">edit</txp:jmd_dashboard_edit>@
 
 This tag outputs an edit link for articles and comments. It must be called by article_custom or recent_comment in either a form or a container tag.
 
@@ -47,7 +30,7 @@ This tag outputs an edit link for articles and comments. It must be called by ar
 | @id@ | int | discussid or thisid | If unset, the plugin uses the current article or comment ID. |
 | @type@ | article, comment | article | Creates a link to the edit screen of whichever @type@ is set. |
 
-h4(#jmd_dashboard_lastmod). @<txp:jmd_dashboard_lastmod format="strftime" gmt="1"/>@
+h2(#jmd_dashboard_lastmod). @<txp:jmd_dashboard_lastmod format="strftime" gmt="1"/>@
 
 This tag displays the last modified date based on the most recent article.
 
@@ -62,8 +45,9 @@ This tag displays the last modified date based on the most recent article.
 
 # --- BEGIN PLUGIN CODE ---
 
-if (txpinterface == 'admin')
+if (txpinterface === 'admin')
 {
+    global $siteurl, $textarray;
     add_privs('jmd_dashboard', 1);
     register_tab('extensions', 'jmd_dashboard', 'jmd_dashboard');
     register_callback('jmd_dashboard', 'jmd_dashboard');
@@ -71,13 +55,11 @@ if (txpinterface == 'admin')
 
     if (gps('p_password') && !gps('event'))
     {
-        $uri = 'http://' . $GLOBALS['siteurl'] . '/textpattern/index.php?event=jmd_dashboard';
         txp_status_header("302 Found");
-        header("Location: $uri");
+        header("Location: http://{$siteurl}/textpattern/?event=jmd_dashboard");
         exit;
     }
-
-    global $textarray;
+    
     $i10n = array(
         'jmd_dashboard_tab' => 'Dashboard',
     );
@@ -85,7 +67,10 @@ if (txpinterface == 'admin')
 }
 
 /**
- * Parses the form jmd_dashboard.
+ * Parses the form "jmd_dashboard".
+ * 
+ * @param string $event
+ * @param string $step
  */
 function jmd_dashboard($event, $step)
 {
@@ -126,8 +111,8 @@ function jmd_dashboard($event, $step)
     </txp:recent_comments>
 </div>
 FORM;
-        safe_insert("txp_form", "Form = '". doSlash($contents) ."',
-            type = 'misc', name = 'jmd_dashboard'");
+        safe_insert("txp_form", "Form='". doSlash($contents) ."',
+            type='misc', name='jmd_dashboard'");
     }
 
     echo parse($contents);
@@ -135,7 +120,8 @@ FORM;
 
 /**
  * Inserts a tab in the top menu row.
- * @param string $buffer Admin page contents.
+ * 
+ * @param string $buffer
  */
 function jmd_dashboard_tab($buffer)
 {
@@ -147,7 +133,7 @@ function jmd_dashboard_tab($buffer)
     </a>
 </td>
 EOD;
-    if (gps('event') == 'jmd_dashboard')
+    if (gps('event') === 'jmd_dashboard')
     {
         $dashTab = str_replace('tabdown', 'tabup', $dashTab);
     }
@@ -159,6 +145,7 @@ EOD;
 
 /**
  * Creates an edit link to an article or comment.
+ * 
  * @param array $atts
  * @param string $thing Link text.
  * @param string $atts['type'] Article or comment.
@@ -170,12 +157,12 @@ function jmd_dashboard_edit($atts, $thing)
         'id' => '',
         'type' => 'article',
     ), $atts));
-    if ($type == 'comment')
+    if ($type === 'comment')
     {
         $id = ($id ? $id : $GLOBALS['thiscomment']['discussid']);
         $href = 'discuss&amp;step=discuss_edit&discussid=' . $id;
     }
-    if ($type == 'article')
+    if ($type === 'article')
     {
         $id = ($id ? $id : $GLOBALS['thisarticle']['thisid']);
         $href = 'article&amp;step=edit&amp;ID=' . $id;
@@ -186,9 +173,10 @@ function jmd_dashboard_edit($atts, $thing)
 
 /**
  * Returns the last modified date of the most recent article.
+ * 
  * @param array $atts
  * @param string $atts['format'] Format the date according to strftime format
- * @param boolean $atts['gmt'] Set the date based on GMT or current locale
+ * @param bool $atts['gmt'] Set the date based on GMT or current locale
  */
 function jmd_dashboard_lastmod($atts)
 {
