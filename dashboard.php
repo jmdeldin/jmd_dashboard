@@ -4,7 +4,7 @@ $plugin = array(
     'author' => 'Jon-Michael Deldin',
     'author_uri' => 'http://jmdeldin.com',
     'description' => 'Customizable dashboard.',
-    'type' => 1,
+    'type' => 3,
 );
 
 if (0) {
