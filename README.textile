@@ -1,6 +1,28 @@
 h1. jmd_dashboard: Customizable dashboard
 
-To modify the dashboard, edit the form @jmd_dashboard@. This form can contain Textpattern and plugin tags.
+"Forum thread":http://forum.textpattern.com/viewtopic.php?id=27244, "hg repo":http://bitbucket.org/jmdeldin/jmd_dashboard/
+
+To modify the dashboard, edit the form "jmd_dashboard":./index.php?event=form&step=form_edit&name=jmd_dashboard. This form can contain Textpattern and plugin tags.
+
+h2. Upgrading from 0.2
+
+The tab-editing interface was removed, so add the following to your dashboard form, save, and reload your dashboard to remove the unnecessary record.
+
+bc. <txp:php>
+if (safe_field('name', 'txp_prefs', 'name = "jmd_dashboard_lang"'))
+{
+    safe_delete('txp_prefs', 'jmd_dashboard_lang');
+    echo "DB updated.";
+}
+</txp:php>
+
+h2. Enabling the dashboard for other users
+
+By default, the dashboard is only available for Publishers. To enable the dashboard for all users, edit the @add_privs()@ line:
+
+bc. add_privs('jmd_dashboard', '1, 2, 3, 4, 5');
+
+User roles are explained at the "Textbook":http://textpattern.net/wiki/index.php?title=User_Roles_and_Permissions
 
 h2. Tag reference
 

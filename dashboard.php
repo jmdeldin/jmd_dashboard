@@ -10,6 +10,8 @@ $plugin = array(
 if (0) {
 ?>
 
+# --- BEGIN PLUGIN HELP ---
+
 //inc <README.textile>
 
 # --- END PLUGIN HELP ---
