@@ -21,27 +21,31 @@ if (0) {
 
 if (txpinterface === 'admin')
 {
-    global $siteurl, $textarray;
     add_privs('jmd_dashboard', 1);
     register_callback('jmd_dashboard', 'jmd_dashboard');
+    jmd_dashboard_login();
     ob_start('jmd_dashboard_tab');
+}
+
+/**
+ * Redirects users to ?event=jmd_dashboard upon login (unless they were
+ * loading another event).
+ */
+function jmd_dashboard_login()
+{
+    global $siteurl;
 
     if (gps('p_password') && !gps('event'))
     {
         txp_status_header("302 Found");
-        header("Location: http://{$siteurl}/textpattern/?event=jmd_dashboard");
+        header("Location: http://$siteurl/textpattern/?event=jmd_dashboard");
         exit;
     }
-    
-    $i10n = array(
-        'jmd_dashboard_tab' => 'Dashboard',
-    );
-    $textarray = array_merge($textarray, $i10n);
 }
 
 /**
  * Parses the form "jmd_dashboard".
- * 
+ *
  * @param string $event
  * @param string $step
  */
@@ -93,11 +97,15 @@ FORM;
 
 /**
  * Inserts a tab in the top menu row.
- * 
+ *
  * @param string $buffer
  */
 function jmd_dashboard_tab($buffer)
 {
+    global $textarray;
+    $textarray = array_merge($textarray, array(
+        'jmd_dashboard_tab' => 'Dashboard',
+    ));
     $gTxt = 'gTxt';
     $dashTab = <<<EOD
 <td class="tabdown">
@@ -118,7 +126,7 @@ EOD;
 
 /**
  * Creates an edit link to an article or comment.
- * 
+ *
  * @param array $atts
  * @param string $thing Link text.
  * @param string $atts['type'] Article or comment.
@@ -146,7 +154,7 @@ function jmd_dashboard_edit($atts, $thing)
 
 /**
  * Returns the last modified date of the most recent article.
- * 
+ *
  * @param array $atts
  * @param string $atts['format'] Format the date according to strftime format
  * @param bool $atts['gmt'] Set the date based on GMT or current locale
