@@ -1,0 +1,24 @@
+h1. jmd_dashboard: Customizable dashboard
+
+To modify the dashboard, edit the form @jmd_dashboard@. This form can contain Textpattern and plugin tags.
+
+h2. Tag reference
+
+* "jmd_dashboard_edit":#jmd_dashboard_edit
+* "jmd_dashboard_lastmod":#jmd_dashboard_lastmod
+
+h2(#jmd_dashboard_edit). @<txp:jmd_dashboard_edit type="article|comment">edit</txp:jmd_dashboard_edit>@
+
+This tag outputs an edit link for articles and comments. It must be called by article_custom or recent_comment in either a form or a container tag.
+
+|_. Attribute |_. Available values |_. Default value |_. Description |
+| @id@ | int | discussid or thisid | If unset, the plugin uses the current article or comment ID. |
+| @type@ | article, comment | article | Creates a link to the edit screen of whichever @type@ is set. |
+
+h2(#jmd_dashboard_lastmod). @<txp:jmd_dashboard_lastmod format="strftime" gmt="1"/>@
+
+This tag displays the last modified date based on the most recent article.
+
+|_. Attribute |_. Available values |_. Default value |_. Description |
+| @format@ | "strftime":http://php.net/strftime | @%Y-%m-%d@ | Date format. |
+| @gmt@ | 1, 0 | 0 | If set (1), the date is adjusted according to GMT. |
