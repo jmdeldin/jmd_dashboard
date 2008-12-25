@@ -21,9 +21,12 @@ if (0) {
 
 if (txpinterface === 'admin')
 {
+    global $textarray;
+    $textarray = array_merge($textarray, array(
+        'jmd_dashboard_tab' => 'Dashboard',
+    ));
     add_privs('jmd_dashboard', 1);
     register_callback('jmd_dashboard', 'jmd_dashboard');
-    jmd_dashboard_login();
     ob_start('jmd_dashboard_tab');
 }
 
@@ -102,10 +105,6 @@ FORM;
  */
 function jmd_dashboard_tab($buffer)
 {
-    global $textarray;
-    $textarray = array_merge($textarray, array(
-        'jmd_dashboard_tab' => 'Dashboard',
-    ));
     $gTxt = 'gTxt';
     $dashTab = <<<EOD
 <td class="tabdown">
@@ -167,9 +166,8 @@ function jmd_dashboard_lastmod($atts)
     ), $atts));
     $modDate = safe_field("unix_timestamp(LastMod)", "textpattern",
         "Posted <= now() ORDER BY Posted desc");
-    $out = safe_strftime($format, $modDate, $gmt);
 
-    return $out;
+    return safe_strftime($format, $modDate, $gmt);
 }
 
 # --- END PLUGIN CODE ---
